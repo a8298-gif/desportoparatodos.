@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Desporto para Todos</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1a1a2e;
+      --accent:  #e94560;
+      --accent2: #0f3460;
+      --light:   #f5f5f5;
+      --card-bg: #ffffff;
+      --text:    #222;
+      --muted:   #666;
+      --radius:  12px;
+      --shadow:  0 4px 20px rgba(0,0,0,.10);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ===== TOP NAV ===== */
+    header {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--primary);
+      box-shadow: 0 2px 12px rgba(0,0,0,.4);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .75rem 1.5rem; gap: 1rem;
+    }
+    .logo { color: #fff; font-size: 1.3rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+    .logo span { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: .4rem; }
+    nav a {
+      color: #ccc; text-decoration: none; font-size: .78rem;
+      padding: .3rem .6rem; border-radius: 6px; transition: all .2s;
+    }
+    nav a:hover, nav a.active { background: var(--accent); color: #fff; }
+    .hamburger { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+    /* ===== HERO ===== */
+    #home {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent2) 60%, var(--accent) 100%);
+      color: #fff; text-align: center; padding: 5rem 1.5rem 4rem;
+    }
+    #home h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; letter-spacing: -1px; }
+    #home h1 span { color: var(--accent); }
+    #home p { max-width: 700px; margin: 1rem auto 2rem; font-size: 1.1rem; opacity: .9; }
+    .sport-icons-hero {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
+      max-width: 900px; margin: 0 auto 2rem;
+    }
+    .sport-icons-hero span {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px; padding: .35rem .9rem; font-size: .85rem;
+      backdrop-filter: blur(4px); cursor: pointer; transition: .2s;
+    }
+    .sport-icons-hero span:hover { background: var(--accent); }
+    .btn-primary {
+      display: inline-block; background: var(--accent); color: #fff;
+      padding: .8rem 2rem; border-radius: 30px; text-decoration: none;
+      font-weight: 700; font-size: 1rem; transition: .2s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: #c73652; transform: translateY(-2px); }
+
+    /* ===== SECTION WRAPPER ===== */
+    .section-wrap {
+      max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem;
+    }
+    .section-title {
+      font-size: 1.9rem; font-weight: 800; color: var(--primary);
+      border-left: 5px solid var(--accent); padding-left: .8rem; margin-bottom: 2rem;
+    }
+
+    /* ===== SPORT GRID (index) ===== */
+    .sport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .sport-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); text-align: center;
+      padding: 1.4rem .8rem; cursor: pointer; transition: .25s;
+      text-decoration: none; color: var(--text);
+      border: 2px solid transparent;
+    }
+    .sport-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .sport-card .icon { font-size: 2.4rem; }
+    .sport-card .name { font-weight: 700; margin-top: .4rem; font-size: .9rem; }
+
+    /* ===== SPORT DETAIL PAGE ===== */
+    .sport-page { display: none; }
+    .sport-page.active { display: block; }
+    .page-hero {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #fff; padding: 3rem 1.5rem; text-align: center;
+    }
+    .page-hero .big-icon { font-size: 4rem; }
+    .page-hero h2 { font-size: 2.5rem; font-weight: 900; margin: .5rem 0; }
+    .page-hero p { opacity: .85; max-width: 600px; margin: 0 auto; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--accent); color: #fff; border: none; border-radius: 30px;
+      padding: .55rem 1.3rem; font-size: .9rem; font-weight: 700;
+      cursor: pointer; margin: 1.5rem 0 0; transition: .2s;
+    }
+    .back-btn:hover { background: #c73652; }
+
+    /* ===== TABS ===== */
+    .tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+    .tab-btn {
+      background: #fff; border: 2px solid #ddd; border-radius: 30px;
+      padding: .45rem 1.1rem; font-size: .85rem; font-weight: 600;
+      cursor: pointer; transition: .2s; color: var(--muted);
+    }
+    .tab-btn:hover, .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ===== INFO CARDS ===== */
+    .info-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.5rem 1.8rem; margin-bottom: 1.2rem;
+    }
+    .info-card h3 { font-size: 1.1rem; color: var(--accent2); margin-bottom: .6rem; font-weight: 700; }
+    .info-card ul { padding-left: 1.2rem; }
+    .info-card ul li { margin-bottom: .35rem; }
+
+    /* ===== NÍVEIS TABLE ===== */
+    .levels-table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+    .levels-table th { background: var(--accent2); color: #fff; padding: .6rem 1rem; text-align: left; }
+    .levels-table td { padding: .55rem 1rem; border-bottom: 1px solid #eee; }
+    .levels-table tr:nth-child(even) td { background: #f9f9f9; }
+
+    /* ===== ATHLETE CARDS ===== */
+    .athlete-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .athlete-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.2rem; text-align: center;
+    }
+    .athlete-card .ath-icon { font-size: 3rem; }
+    .athlete-card h4 { font-weight: 700; margin: .5rem 0 .2rem; }
+    .athlete-card p { font-size: .82rem; color: var(--muted); }
+
+    /* ===== HEALTH SECTION ===== */
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .benefit-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.4rem;
+      border-top: 4px solid var(--accent);
+    }
+    .benefit-card .b-icon { font-size: 2rem; margin-bottom: .5rem; }
+    .benefit-card h4 { font-weight: 700; margin-bottom: .4rem; }
+    .benefit-card p { font-size: .88rem; color: var(--muted); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--primary); color: #aaa;
+      text-align: center; padding: 2rem 1rem; font-size: .85rem;
+      margin-top: 3rem;
+    }
+    footer strong { color: var(--accent); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav { display: none; flex-direction: column; width: 100%; }
+      nav.open { display: flex; }
+      .hamburger { display: block; }
+      .nav-inner { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="nav-inner">
+    <a class="logo" href="#" onclick="showHome()">🏆 <span>Desporto</span> para Todos</a>
+    <button class="hamburger" onclick="toggleNav()">☰</button>
+    <nav id="mainNav">
+      <a href="#" onclick="showHome()">🏠 Início</a>
+      <a href="#" onclick="showSport('futebol')">⚽ Futebol</a>
+      <a href="#" onclick="showSport('futsal')">🥅 Futsal</a>
+      <a href="#" onclick="showSport('voleibol')">🏐 Voleibol</a>
+      <a href="#" onclick="showSport('basquetebol')">🏀 Basquetebol</a>
+      <a href="#" onclick="showSport('tenis')">🎾 Ténis</a>
+      <a href="#" onclick="showSport('badminton')">🏸 Badminton</a>
+      <a href="#" onclick="showSport('andebol')">🤾 Andebol</a>
+      <a href="#" onclick="showSport('golfe')">⛳ Golfe</a>
+      <a href="#" onclick="showSport('pingpong')">🏓 Ping Pong</a>
+      <a href="#" onclick="showSport('futebolamericano')">🏈 F. Americano</a>
+      <a href="#" onclick="showSport('rugby')">🏉 Rugby</a>
+      <a href="#" onclick="showSport('kickboxing')">🥊 Kickboxing</a>
+      <a href="#" onclick="showSport('box')">🥊 Box</a>
+      <a href="#" onclick="showSport('karate')">🥋 Karaté</a>
+      <a href="#" onclick="showSport('muaythai')">🥋 Muay Thai</a>
+      <a href="#" onclick="showSport('jiujitsu')">🥋 Jiu-Jitsu</a>
+      <a href="#" onclick="showSport('natacao')">🏊 Natação</a>
+      <a href="#" onclick="showSport('danca')">💃 Dança</a>
+      <a href="#" onclick="showSport('patinagem')">⛸️ Patinagem</a>
+      <a href="#" onclick="showSport('ginastica')">🤸 Ginástica</a>
+      <a href="#" onclick="showSport('motociclismo')">🏍️ Motociclismo</a>
+      <a href="#" onclick="showSport('automobilismo')">🏎️ Automobilismo</a>
+      <a href="#" onclick="showHealth()">❤️ Saúde</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HOME PAGE ===================== -->
+<div id="homePage">
+  <section id="home">
+    <h1>🏆 <span>Desporto</span> para Todos</h1>
+    <p>Descobre as regras, a história, os atletas e a importância de mais de 20 modalidades desportivas. Para iniciantes, jovens e todos os níveis!</p>
+    <div class="sport-icons-hero">
+      <span onclick="showSport('futebol')">⚽ Futebol</span>
+      <span onclick="showSport('futsal')">🥅 Futsal</span>
+      <span onclick="showSport('voleibol')">🏐 Voleibol</span>
+      <span onclick="showSport('basquetebol')">🏀 Basquetebol</span>
+      <span onclick="showSport('tenis')">🎾 Ténis</span>
+      <span onclick="showSport('badminton')">🏸 Badminton</span>
+      <span onclick="showSport('andebol')">🤾 Andebol</span>
+      <span onclick="showSport('golfe')">⛳ Golfe</span>
+      <span onclick="showSport('pingpong')">🏓 Ping Pong</span>
+      <span onclick="showSport('futebolamericano')">🏈 F. Americano</span>
+      <span onclick="showSport('rugby')">🏉 Rugby</span>
+      <span onclick="showSport('kickboxing')">🥊 Kickboxing</span>
+      <span onclick="showSport('box')">🥊 Box</span>
+      <span onclick="showSport('karate')">🥋 Karaté</span>
+      <span onclick="showSport('muaythai')">🥋 Muay Thai</span>
+      <span onclick="showSport('jiujitsu')">🥋 Jiu-Jitsu</span>
+      <span onclick="showSport('natacao')">🏊 Natação</span>
+      <span onclick="showSport('danca')">💃 Dança</span>
+      <span onclick="showSport('patinagem')">⛸️ Patinagem</span>
+      <span onclick="showSport('ginastica')">🤸 Ginástica</span>
+      <span onclick="showSport('motociclismo')">🏍️ Motociclismo</span>
+      <span onclick="showSport('automobilismo')">🏎️ Automobilismo</span>
+    </div>
+    <a class="btn-primary" href="#sports-section">Explorar Desportos ↓</a>
+  </section>
+
+  <div class="section-wrap" id="sports-section">
+    <h2 class="section-title">🏅 Todas as Modalidades</h2>
+    <div class="sport-grid">
+      <a class="sport-card" onclick="showSport('futebol')"><div class="icon">⚽</div><div class="name">Futebol</div></a>
+      <a class="sport-card" onclick="showSport('futsal')"><div class="icon">🥅</div><div class="name">Futsal</div></a>
+      <a class="sport-card" onclick="showSport('voleibol')"><div class="icon">🏐</div><div class="name">Voleibol</div></a>
+      <a class="sport-card" onclick="showSport('basquetebol')"><div class="icon">🏀</div><div class="name">Basquetebol</div></a>
+      <a class="sport-card" onclick="showSport('tenis')"><div class="icon">🎾</div><div class="name">Ténis</div></a>
+      <a class="sport-card" onclick="showSport('badminton')"><div class="icon">🏸</div><div class="name">Badminton</div></a>
+      <a class="sport-card" onclick="showSport('andebol')"><div class="icon">🤾</div><div class="name">Andebol</div></a>
+      <a class="sport-card" onclick="showSport('golfe')"><div class="icon">⛳</div><div class="name">Golfe</div></a>
+      <a class="sport-card" onclick="showSport('pingpong')"><div class="icon">🏓</div><div class="name">Ping Pong</div></a>
+      <a class="sport-card" onclick="showSport('futebolamericano')"><div class="icon">🏈</div><div class="name">F. Americano</div></a>
+      <a class="sport-card" onclick="showSport('rugby')"><div class="icon">🏉</div><div class="name">Rugby</div></a>
+      <a class="sport-card" onclick="showSport('kickboxing')"><div class="icon">🥊</div><div class="name">Kickboxing</div></a>
+      <a class="sport-card" onclick="showSport('box')"><div class="icon">🥊</div><div class="name">Box</div></a>
+      <a class="sport-card" onclick="showSport('karate')"><div class="icon">🥋</div><div class="name">Karaté</div></a>
+      <a class="sport-card" onclick="showSport('muaythai')"><div class="icon">🥋</div><div class="name">Muay Thai</div></a>
+      <a class="sport-card" onclick="showSport('jiujitsu')"><div class="icon">🥋</div><div class="name">Jiu-Jitsu</div></a>
+      <a class="sport-card" onclick="showSport('natacao')"><div class="icon">🏊</div><div class="name">Natação</div></a>
+      <a class="sport-card" onclick="showSport('danca')"><div class="icon">💃</div><div class="name">Dança</div></a>
+      <a class="sport-card" onclick="showSport('patinagem')"><div class="icon">⛸️</div><div class="name">Patinagem</div></a>
+      <a class="sport-card" onclick="showSport('ginastica')"><div class="icon">🤸</div><div class="name">Ginástica</div></a>
+      <a class="sport-card" onclick="showSport('motociclismo')"><div class="icon">🏍️</div><div class="name">Motociclismo</div></a>
+      <a class="sport-card" onclick="showSport('automobilismo')"><div class="icon">🏎️</div><div class="name">Automobilismo</div></a>
+    </div>
+  </div>
+
+  <!-- HEALTH PREVIEW -->
+  <div style="background: linear-gradient(135deg,#0f3460,#1a1a2e); color:#fff; padding: 3rem 1.5rem; text-align:center;">
+    <h2 style="font-size:2rem; margin-bottom:1rem;">❤️ Desporto & Saúde</h2>
+    <p style="max-width:600px;margin:0 auto 1.5rem;opacity:.85;">O desporto vai muito além da competição — melhora a saúde mental, fortalece o corpo e cria laços sociais.</p>
+    <button class="btn-primary" onclick="showHealth()">Ver Benefícios para a Saúde</button>
+  </div>
+
+  <!-- NÍVEIS -->
+  <div class="section-wrap">
+    <h2 class="section-title">🎯 Níveis de Competição em Portugal</h2>
+    <div class="info-card">
+      <table class="levels-table">
+        <thead><tr><th>Escalão</th><th>Idade Aproximada</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td>🐣 Petizes</td><td>5–7 anos</td><td>Primeiros contactos com o desporto, jogo livre e coordenação motora.</td></tr>
+          <tr><td>🌱 Traquinas</td><td>8–9 anos</td><td>Iniciação às regras básicas, trabalho em equipa.</td></tr>
+          <tr><td>⭐ Benjamins</td><td>10–11 anos</td><td>Desenvolvimento técnico básico, competição leve.</td></tr>
+          <tr><td>🔵 Infantis</td><td>12–13 anos</td><td>Aprendizagem táctica, competições regionais.</td></tr>
+          <tr><td>🟡 Iniciados</td><td>14–15 anos</td><td>Competição mais séria, seleções distritais.</td></tr>
+          <tr><td>🟠 Juvenis</td><td>16–17 anos</td><td>Alto desempenho jovem, campeonatos nacionais.</td></tr>
+          <tr><td>🔴 Juniores</td><td>18–19 anos</td><td>Porta de entrada para o desporto adulto.</td></tr>
+          <tr><td>🏆 Seniores</td><td>20–34 anos</td><td>Nível máximo de competição, profissionalismo.</td></tr>
+          <tr><td>🌟 Veteranos</td><td>35+ anos</td><td>Competição para atletas experientes, foco no prazer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HEALTH PAGE ===================== -->
+<div id="healthPage" style="display:none;">
+  <div class="page-hero">
+    <div class="big-icon">❤️</div>
+    <h2>Desporto & Saúde</h2>
+    <p>Descobre como o desporto transforma a tua vida física e mental.</p>
+    <button class="back-btn" onclick="showHome()">← Voltar ao Início</button>
+  </div>
+  <div class="section-wrap">
+    <h2 class="section-title">💪 Benefícios Físicos e Mentais</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card"><div class="b-icon">🫀</div><h4>Saúde Cardiovascular</h4><p>O desporto regular fortalece o coração, reduz a pressão arterial e melhora a circulação sanguínea.</p></div>
+      <div class="benefit-card"><div class="b-icon">🧠</div><h4>Saúde Mental</h4><p>Reduz o stress, a ansiedade e a depressão. Liberta endorfinas que melhoram o humor e o bem-estar.</p></div>
+      <div class="benefit-card"><div class="b-icon">😴</div><h4>Melhor Sono</h4><p>Atletas ativos dormem melhor e têm um sono mais profundo e reparador.</p></div>
+      <div class="benefit-card"><div class="b-icon">🦴</div><h4>Ossos e Músculos</h4><p>Fortalece a densidade óssea e a massa muscular, prevenindo osteoporose e lesões futuras.</p></div>
+      <div class="benefit-card"><div class="b-icon">🤝</div><h4>Relações Sociais</h4><p>O desporto em equipa cria amizades duradouras e desenvolve competências sociais essenciais.</p></div>
+      <div class="benefit-card"><div class="b-icon">🎯</div><h4>Foco e Disciplina</h4><p>Treinar regularmente ensina disciplina, persistência e capacidade de concentração.</p></div>
+      <div class="benefit-card"><div class="b-icon">⚖️</div><h4>Peso Saudável</h4><p>A atividade física regular ajuda a manter um peso equilibrado e um metabolismo ativo.</p></div>
+      <div class="benefit-card"><div class="b-icon">💡</div><h4>Autoconfiança</h4><p>Superar desafios no desporto constrói confiança que se reflete em todas as áreas da vida.</p></div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:3rem;">🧘 Valores que o Desporto Ensina</h2>
+    <div class="info-card">
+      <ul>
+        <li><strong>Respeito</strong> — pelo adversário, pelo árbitro e pelas regras</li>
+        <li><strong>Fair-play</strong> — jogar limpo, ganhar e perder com dignidade</li>
+        <li><strong>Trabalho em equipa</strong> — o coletivo acima do individual</li>
+        <li><strong>Perseverança</strong> — continuar mesmo quando é difícil</li>
+        <li><strong>Responsabilidade</strong> — cumprir compromissos de treino e competição</li>
+        <li><strong>Liderança</strong> — inspirar e motivar os colegas de equipa</li>
+        <li><strong>Inclusão</strong> — o desporto é para todos, independentemente da origem</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SPORT PAGES ===================== -->
+<div id="sportPages"></div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <p>🏆 <strong>Desporto para Todos</strong> · Trabalho de TIC · 8.º Ano · 2025/2026</p>
+  <p style="margin-top:.4rem;">Criado com dedicação para promover o desporto entre os jovens portugueses 🇵🇹</p>
+</footer>
+
+<script>
+// ===================== SPORT DATA =====================
+const sports = {
+  futebol: {
+    icon: "⚽", name: "Futebol",
+    intro: "O futebol é o desporto mais popular do mundo, praticado por mais de 250 milhões de pessoas em mais de 200 países. É um jogo coletivo que une culturas, gera emoções únicas e forma gerações de atletas.",
+    historia: "O futebol moderno nasceu em Inglaterra em 1863, quando a Football Association estabeleceu as primeiras regras oficiais. Antes disso, jogos com bola existiam na China (cuju), Grécia e Roma antigas. No século XX, tornou-se o desporto-rei mundial, com o primeiro Mundial a decorrer em 1930 no Uruguai.",
+    regras: ["11 jogadores por equipa (incluindo guarda-redes)", "Jogo dura 90 minutos (2 partes de 45)", "Proibido tocar na bola com as mãos (exceto GR)", "Golo conta quando a bola cruza a linha de baliza", "Falta grave resulta em cartão amarelo ou vermelho", "Penálti é marcado a 11 metros da baliza", "Fora de jogo: atacante à frente do último defesa"],
+    beneficios: ["Melhora a resistência cardiovascular", "Desenvolve coordenação e agilidade", "Promove trabalho em equipa e comunicação", "Fortalece pernas, core e reflexos", "Reduz stress e ansiedade"],
+    atletas: [
+      { name: "Cristiano Ronaldo", country: "🇵🇹 Portugal", info: "5x Bola de Ouro, recordista de golos internacionais" },
+      { name: "Lionel Messi", country: "🇦🇷 Argentina", info: "8x Bola de Ouro, Campeão do Mundo 2022" },
+      { name: "Pelé", country: "🇧🇷 Brasil", info: "3x Campeão do Mundo, considerado o maior de todos os tempos" },
+      { name: "Eusébio", country: "🇵🇹 Portugal", info: "A Pantera Negra, ídolo do Benfica e da seleção portuguesa" }
+    ],
+    curiosidades: ["O Brasil é o único país a participar em todos os Mundiais (24 edições)", "A bola de futebol tradicional tem 32 painéis", "O jogo mais longo de sempre durou mais de 35 horas", "O primeiro golo registado foi em 1872", "Mais de 3,5 mil milhões de pessoas assistem ao Mundial de Futebol"],
+    estilo: "O futebol pode ser jogado em vários estilos: tiki-taka (posse de bola, típico do Barcelona/Espanha), contra-ataque rápido, pressing alto, jogo direto. Cada equipa tem uma identidade tática."
+  },
+  futsal: {
+    icon: "🥅", name: "Futsal",
+    intro: "O futsal é uma versão do futebol jogada em campo coberto com 5 jogadores por equipa. Mais rápido e técnico que o futebol de campo, é excelente para desenvolver controlo de bola e inteligência tática.",
+    historia: "Nasceu no Uruguai em 1930, criado por Juan Carlos Ceriani para ser jogado em ginásios durante o inverno. Rapidamente se espalhou pelo Brasil, que se tornou a principal potência mundial. A FIFA reconheceu o futsal em 1989.",
+    regras: ["5 jogadores por equipa (incluindo GR)", "Dois tempos de 20 minutos (tempo parado)", "Bola mais pequena e menos ressalto", "Não existe fora de jogo", "Faltas acumuladas: a partir da 6ª, penálti direto a 10m", "GR pode jogar como jogador de campo", "Substituições ilimitadas durante o jogo"],
+    beneficios: ["Desenvolve técnica individual rapidamente", "Melhora visão de jogo e tomada de decisão", "Excelente para crianças iniciarem o futebol", "Trabalha reflexos e velocidade de pensamento"],
+    atletas: [
+      { name: "Falcão", country: "🇧🇷 Brasil", info: "Considerado o melhor jogador de futsal de todos os tempos" },
+      { name: "Ricardinho", country: "🇵🇹 Portugal", info: "5x Melhor Jogador do Mundo, referência do futsal europeu" },
+      { name: "Ferrão", country: "🇧🇷 Brasil", info: "Atual melhor do mundo, joga no FC Barcelona" }
+    ],
+    curiosidades: ["Portugal é uma potência mundial no futsal", "Ricardinho venceu 5 prémios de melhor do mundo", "O Mundial de Futsal realiza-se de 4 em 4 anos", "A bola de futsal pesa entre 400 e 440 gramas", "O futsal é praticado em mais de 100 países"],
+    estilo: "O futsal valoriza a técnica individual, o passe rápido e a criatividade. O 'pivot' é o jogador mais avançado, comparável ao avançado centro no futebol."
+  },
+  voleibol: {
+    icon: "🏐", name: "Voleibol",
+    intro: "O voleibol é um desporto coletivo onde duas equipas se separam por uma rede e tentam fazer a bola tocar no chão do campo adversário. É um dos desportos mais praticados a nível mundial, tanto em versão indoor como de praia.",
+    historia: "Inventado em 1895 por William G. Morgan em Massachusetts, EUA. Foi inicialmente chamado 'Mintonette'. Tornou-se Olímpico em 1964 (Tóquio). O voleibol de praia tornou-se Olímpico em 1996.",
+    regras: ["6 jogadores por equipa em campo", "3 toques máximos por equipa antes de passar a rede", "Sets ganhos ao chegar a 25 pontos (com 2 de diferença)", "Jogo de 5 sets (o 5.º vai até 15)", "Líbero: especialista de defesa, não pode atacar", "Rotação obrigatória dos jogadores no sentido dos ponteiros do relógio", "Proibido segurar ou agarrar a bola"],
+    beneficios: ["Desenvolve coordenação olho-mão", "Fortalece braços, ombros e pernas", "Excelente trabalho de equipa e comunicação", "Melhora reflexos e tempo de reação"],
+    atletas: [
+      { name: "Giba", country: "🇧🇷 Brasil", info: "Considerado o melhor jogador de sempre" },
+      { name: "Kerri Walsh", country: "🇺🇸 EUA", info: "3x Campeã Olímpica no voleibol de praia" },
+      { name: "Ivan Zaytsev", country: "🇮🇹 Itália", info: "'O Czar' - um dos melhores atacantes europeus" }
+    ],
+    curiosidades: ["O Brasil venceu o Mundial masculino 3 vezes", "A rede do voleibol masculino mede 2,43m", "Um saque pode atingir mais de 130 km/h", "O voleibol de praia usa apenas 2 jogadores por equipa", "É o 2.º desporto coletivo mais popular do mundo"],
+    estilo: "Posições principais: Líbero (defesa), Distribuidor (organização do jogo), Oposto e Ponteiro (atacantes), Central (bloqueio e ataque rápido)."
+  },
+  basquetebol: {
+    icon: "🏀", name: "Basquetebol",
+    intro: "O basquetebol é um desporto veloz e técnico onde duas equipas tentam marcar pontos ao acertar na cesta adversária. É um dos desportos mais populares do mundo, especialmente nos EUA e na Europa.",
+    historia: "Inventado em dezembro de 1891 pelo canadiano James Naismith em Springfield, Massachusetts. Usou cestos de pêssego como alvo inicial! A NBA foi fundada em 1946. Tornou-se Olímpico em 1936.",
+    regras: ["5 jogadores por equipa em campo", "4 períodos de 12 minutos (NBA) ou 10 minutos (FIBA)", "Cesto vale 2 pontos (3 pontos além da linha de 3)", "Lançamento livre vale 1 ponto", "24 segundos para rematar (NBA) / 24 segundos (FIBA)", "5 faltas pessoais = expulsão do jogador", "Bola deve ser dribblada ao deslocar"],
+    beneficios: ["Desenvolve agilidade, velocidade e coordenação", "Excelente para crescimento em jovens", "Trabalho intensivo de equipa", "Melhora tomada de decisão sob pressão"],
+    atletas: [
+      { name: "Michael Jordan", country: "🇺🇸 EUA", info: "6x Campeão NBA, considerado o GOAT do basquetebol" },
+      { name: "LeBron James", country: "🇺🇸 EUA", info: "4x Campeão NBA, recordista de pontos da NBA" },
+      { name: "Kobe Bryant", country: "🇺🇸 EUA", info: "5x Campeão NBA, lenda dos LA Lakers" },
+      { name: "Nikola Jokić", country: "🇷🇸 Sérvia", info: "3x MVP da NBA, revolucionou a posição de pivot" }
+    ],
+    curiosidades: ["O primeiro jogo usou uma bola de futebol", "LeBron é o maior pontuador de sempre na NBA", "A NBA tem 30 equipas em EUA e Canadá", "Um jogador profissional corre em média 5km por jogo", "O salto de distância recorde numa enterrada é de 2,9m de afastamento"],
+    estilo: "Posições: Base (playmaker), Escolta, Avançado pequeno, Ala-pivot e Pivot/Centro. O jogo moderno valoriza a versatilidade e os lançamentos de 3 pontos."
+  },
+  tenis: {
+    icon: "🎾", name: "Ténis",
+    intro: "O ténis é um desporto individual (ou em pares) praticado em court, onde os jogadores usam raquetes para enviar uma bola por cima de uma rede. É um dos desportos mais elegantes e exigentes do mundo.",
+    historia: "O ténis moderno foi desenvolvido em Inglaterra nos anos 1870 por Walter Clopton Wingfield. O torneio de Wimbledon, o mais antigo do mundo, realizou-se pela primeira vez em 1877. Tornou-se Olímpico em 1896.",
+    regras: ["Pontuação: 0, 15, 30, 40, Jogo", "Set ganho com 6 jogos (com 2 de diferença)", "Partida: melhor de 3 ou 5 sets", "Falta no serviço: 2 tentativas permitidas", "Tie-break aos 6-6 (exceto 5.º set em alguns torneios)", "Bola fora ou na rede = ponto para o adversário", "Surfaces: relva, terra batida, piso duro"],
+    beneficios: ["Excelente cardiovascular e muscular", "Desenvolvess reflexos e coordenação", "Exercita corpo inteiro", "Requer concentração mental intensa"],
+    atletas: [
+      { name: "Rafael Nadal", country: "🇪🇸 Espanha", info: "22 Grand Slams, 'Rei de Roland Garros'" },
+      { name: "Novak Djokovic", country: "🇷🇸 Sérvia", info: "Recordista de Grand Slams masculinos (24)" },
+      { name: "Roger Federer", country: "🇨🇭 Suíça", info: "20 Grand Slams, considerado o jogador mais elegante" },
+      { name: "Serena Williams", country: "🇺🇸 EUA", info: "23 Grand Slams, dominadora do ténis feminino" }
+    ],
+    curiosidades: ["Wimbledon usa bolas novas a cada 7-9 jogos", "A bola mais rápida já servida atingiu 263 km/h", "Os 4 Grand Slams: Australian Open, Roland Garros, Wimbledon, US Open", "O jogo mais longo durou 11h 5min (Isner vs. Mahut, 2010)", "O tênis surgiu de um jogo chamado 'jeu de paume'"],
+    estilo: "Estilos: baseline (joga do fundo), serve-and-volley (sobe à rede), all-court (versátil). Cada surface favorece um estilo diferente."
+  },
+  badminton: {
+    icon: "🏸", name: "Badminton",
+    intro: "O badminton é o desporto de raquete mais rápido do mundo. Jogado com um volante (shuttlecock), exige velocidade, agilidade e precisão. É muito popular na Ásia e está a crescer na Europa.",
+    historia: "Originou-se na Índia e foi trazido para Inglaterra pelo Duke of Beaufort em 1873, na sua propriedade chamada 'Badminton'. As regras foram formalizadas em 1893. Tornou-se Olímpico em Barcelona 1992.",
+    regras: ["Melhor de 3 sets de 21 pontos", "Rally point: ponto marcado em cada jogada", "Serviço abaixo da cintura obrigatório", "Volante não pode tocar o chão", "Linhas laterais diferentes para singles e doubles", "Serviço alternado após ponto no set"],
+    beneficios: ["Desporto mais completo em termos de velocidade de reação", "Excelente queima calórica (até 450kcal/h)", "Desenvolve agilidade e coordenação", "Ótimo para saúde cardiovascular"],
+    atletas: [
+      { name: "Lin Dan", country: "🇨🇳 China", info: "2x Campeão Olímpico, 5x Campeão do Mundo" },
+      { name: "Carolina Marín", country: "🇪🇸 Espanha", info: "Campeã Olímpica, 3x Campeã do Mundo feminina" },
+      { name: "Kevin Sanjaya", country: "🇮🇩 Indonésia", info: "Número 1 mundial em duplas" }
+    ],
+    curiosidades: ["O volante pode atingir 493 km/h - recorde mundial!", "A China domina o badminton olímpico", "Um jogo profissional inclui centenas de deslocamentos rápidos", "O volante tradicional é feito com penas de ganso", "É o desporto de raquete mais popular do mundo em número de praticantes"],
+    estilo: "Modalidades: singles masculino e feminino, duplas masculinas, femininas e mistas. O smash é o golpe mais temido."
+  },
+  andebol: {
+    icon: "🤾", name: "Andebol",
+    intro: "O andebol é um desporto coletivo de alta intensidade, jogado em campo coberto com 7 jogadores por equipa. Muito popular na Europa, especialmente em países como França, Dinamarca, Alemanha e Portugal.",
+    historia: "Desenvolvido no final do século XIX na Europa Central. A primeira partida oficial data de 1917. O andebol indoor tornou-se Olímpico em Munique 1972. Portugal tem tradição forte nesta modalidade.",
+    regras: ["7 jogadores por equipa (incluindo GR)", "Dois tempos de 30 minutos", "Jogadores de campo não podem entrar na área de baliza", "3 passos máximos sem driblar", "Penálti de 7 metros para faltas graves", "Suspensões de 2 minutos para infrações", "Guarda-redes pode defender com todo o corpo"],
+    beneficios: ["Desenvolve velocidade e explosividade", "Excelente trabalho de equipa", "Fortalece membros superiores e inferiores", "Melhora resistência e agilidade"],
+    atletas: [
+      { name: "Nikola Karabatić", country: "🇫🇷 França", info: "Melhor jogador de sempre, 3x Campeão do Mundo" },
+      { name: "Mikkel Hansen", country: "🇩🇰 Dinamarca", info: "2x Melhor jogador do mundo" },
+      { name: "Ricardo Cantalejo", country: "🇵🇹 Portugal", info: "Lenda do andebol português" }
+    ],
+    curiosidades: ["A Dinamarca é bicampeã olímpica (2016 e 2020)", "França é a seleção mais titulada do Mundo", "Portugal chegou aos Quartos-de-Final do Euro 2020", "Um jogador profissional corre mais de 7km por jogo", "A bola de andebol tem circunferência de 58-60cm (masculino)"],
+    estilo: "Posições: Guarda-redes, Central, Pontas (direita e esquerda), Pivô e Laterais. O pivô é a chave do ataque organizado."
+  },
+  golfe: {
+    icon: "⛳", name: "Golfe",
+    intro: "O golfe é um desporto individual de precisão e concentração, jogado em percursos extensos. O objetivo é completar cada buraco no menor número de tacadas possível. É associado à elegância e à paciência.",
+    historia: "Originado na Escócia medieval, no século XV. O primeiro campo de golfe reconhecido é o St Andrews (1552). Tornou-se Olímpico em 1900, depois foi retirado e voltou em 2016 (Rio de Janeiro).",
+    regras: ["18 buracos num campo standard", "O par é o número de tacadas esperado por buraco", "Birdie: -1 abaixo do par; Eagle: -2; Bogey: +1", "Penalização por bola fora dos limites", "Vence quem terminar com menos tacadas", "Clubes: máximo de 14 no saco", "Silêncio obrigatório durante as tacadas"],
+    beneficios: ["Excelente para saúde mental e concentração", "Boa atividade física de baixo impacto", "Estimula passeios longos ao ar livre", "Desenvolve disciplina e paciência"],
+    atletas: [
+      { name: "Tiger Woods", country: "🇺🇸 EUA", info: "15 Grand Slams, revolucionou o golfe mundial" },
+      { name: "Jack Nicklaus", country: "🇺🇸 EUA", info: "18 Grand Slams, recordista histórico" },
+      { name: "Rory McIlroy", country: "🇬🇧 Irlanda Norte", info: "4 Grand Slams, dominador atual do circuito" }
+    ],
+    curiosidades: ["Os 4 Majors: Masters, US Open, The Open Championship e PGA Championship", "Um 'hole in one' tem probabilidade de 1 em 12.500 para amadores", "Tiger Woods tornou-se profissional aos 20 anos", "O campo de golfe mais antigo tem mais de 450 anos", "O golfe foi praticado na Lua por Alan Shepard em 1971"],
+    estilo: "Tipos de tacadas: drive (longa distância), iron (precisão), wedge (curta distância e bunkers), putt (no green). A estratégia é fundamental."
+  },
+  pingpong: {
+    icon: "🏓", name: "Ping Pong",
+    intro: "O ténis de mesa (ping pong) é um desporto de raquete jogado numa mesa dividida por uma rede. Exige reflexos extraordinários e é um dos desportos com mais praticantes do mundo, especialmente na Ásia.",
+    historia: "Surgiu em Inglaterra no final do século XIX como entretenimento doméstico. O nome 'Ping Pong' foi registado como marca comercial em 1901. Tornou-se Olímpico em Seul 1988. A China domina desde então.",
+    regras: ["Sets de 11 pontos", "Serviço muda a cada 2 pontos", "Melhor de 5 ou 7 sets", "Bola deve tocar na metade do próprio lado no serviço", "Edge ball (canto) é ponto válido", "A raquete pode ter duas cores de borracha", "Let no serviço: repetição sem penalização"],
+    beneficios: ["Reflexos mais rápidos de qualquer desporto", "Excelente para saúde cognitiva e memória", "Baixo impacto nas articulações", "Pode ser praticado em qualquer idade"],
+    atletas: [
+      { name: "Ma Long", country: "🇨🇳 China", info: "Considerado o maior de todos os tempos, 2x Campeão Olímpico" },
+      { name: "Fan Zhendong", country: "🇨🇳 China", info: "Atual número 1 mundial" },
+      { name: "Timo Boll", country: "🇩🇪 Alemanha", info: "Maior nome europeu do século XXI" }
+    ],
+    curiosidades: ["A China venceu mais de 60% de todos os títulos olímpicos", "Uma bola pode girar a mais de 9.000 RPM", "Estudos mostram que o ping pong previne Alzheimer", "A velocidade máxima registada numa bola é 112 km/h", "Tem mais de 300 milhões de praticantes ativos"],
+    estilo: "Estilos: ataque rápido, topspin, defesa chopblock. A borracha da raquete influencia muito o estilo de jogo."
+  },
+  futebolamericano: {
+    icon: "🏈", name: "Futebol Americano",
+    intro: "O futebol americano é um dos desportos mais populares dos EUA. É um jogo de estratégia e força onde duas equipas tentam avançar com a bola oval até à end zone adversária. O Super Bowl é o maior evento desportivo anual do mundo.",
+    historia: "Evoluiu do rugby e futebol inglês nos EUA no final do século XIX. A NFL foi fundada em 1920. O primeiro Super Bowl foi em 1967 (Green Bay Packers vs. Kansas City Chiefs). Hoje atrai mais de 100 milhões de espectadores.",
+    regras: ["11 jogadores por equipa em campo", "4 downs para avançar 10 jardas ou marcar", "Touchdown = 6 pontos + extra point/2-point conversion", "Field goal = 3 pontos", "Safety = 2 pontos para a defesa", "Jogo de 4 quartos de 15 minutos", "Quarterback é o líder do ataque"],
+    beneficios: ["Desenvolve força, velocidade e resistência", "Exige estratégia e inteligência tática", "Trabalho de equipa extremamente coordenado", "Desenvolve coragem e resistência à pressão"],
+    atletas: [
+      { name: "Tom Brady", country: "🇺🇸 EUA", info: "7x Super Bowl, considerado o GOAT do futebol americano" },
+      { name: "Jerry Rice", country: "🇺🇸 EUA", info: "Considerado o melhor wide receiver de sempre" },
+      { name: "Patrick Mahomes", country: "🇺🇸 EUA", info: "3x Super Bowl, domina a NFL atual" }
+    ],
+    curiosidades: ["O Super Bowl é o evento de TV mais visto anualmente nos EUA", "Tom Brady ganhou 7 Super Bowls - mais que qualquer equipa", "Os jogadores usam mais de 15 peças de equipamento", "O campo mede 100 jardas (91.4 metros)", "A NFL gera mais de 20 mil milhões de dólares por ano"],
+    estilo: "Posições-chave: Quarterback (QB), Running Back, Wide Receiver, Offensive Line, Linebacker, Cornerback. Cada jogo tem uma play desenhada."
+  },
+  rugby: {
+    icon: "🏉", name: "Rugby",
+    intro: "O rugby é um desporto de contacto físico intenso onde duas equipas tentam marcar pontos ao levar a bola oval até à zona de ensaio adversária. Nasceu em Inglaterra e hoje é muito popular no Reino Unido, Irlanda, França, Nova Zelândia e África do Sul.",
+    historia: "Segundo a lenda, em 1823 William Webb Ellis pegou na bola durante um jogo de futebol na Rugby School e correu com ela — nascendo assim o rugby. A Rugby Football Union foi fundada em 1871. O Copa do Mundo de Rugby é realizada desde 1987.",
+    regras: ["15 jogadores por equipa (Rugby Union) ou 13 (Rugby League)", "Ensaio vale 5 pontos + conversão de 2", "Drop goal vale 3 pontos", "Penalty kick vale 3 pontos", "A bola só pode ser passada para trás ou lateralmente", "Tackles: jogador deve largar a bola após ser derrubado", "Scrum e lineout para reiniciar o jogo"],
+    beneficios: ["Desenvolve força física e resistência", "Ensina respeito e disciplina rigorosa", "Excelente trabalho em equipa", "Coragem e resiliência mental"],
+    atletas: [
+      { name: "Jonah Lomu", country: "🇳🇿 Nova Zelândia", info: "Lenda dos All Blacks, revolucionou a posição de ala" },
+      { name: "Dan Carter", country: "🇳🇿 Nova Zelândia", info: "Melhor marcador de pontos da história do rugby" },
+      { name: "Richie McCaw", country: "🇳🇿 Nova Zelândia", info: "2x Campeão do Mundo, capitão mais vitorioso" }
+    ],
+    curiosidades: ["A Nova Zelândia é o país mais bem-sucedido no rugby", "O Haka é a dança de guerra dos All Blacks antes dos jogos", "A Copa do Mundo de Rugby 2023 foi realizada em França", "O rugby de 7 (Sevens) tornou-se Olímpico em 2016", "Portugal participou no Mundial de Rugby de 2023"],
+    estilo: "Tipos: Rugby Union (15 jogadores), Rugby League (13), Rugby Sevens (7). Posições divididas em forwards (força) e backs (velocidade)."
+  },
+  kickboxing: {
+    icon: "🥊", name: "Kickboxing",
+    intro: "O kickboxing é uma arte marcial e desporto de combate que combina técnicas de boxe (socos) com técnicas de karaté (pontapés). É praticado tanto a nível competitivo como para fitness e defesa pessoal.",
+    historia: "Desenvolveu-se nos anos 1970 nos EUA e Japão, combinando elementos do boxe ocidental com karaté japonês e Muay Thai. A WAKO (World Association of Kickboxing Organizations) foi fundada em 1976. Cresce rapidamente em Portugal.",
+    regras: ["Pontuação por socos e pontapés limpos ao adversário", "Rounds de 2-3 minutos com intervalos de 1 minuto", "Proibido: cotoveladas, joelhadas, cabeçadas", "Lutador derrubado tem 10 segundos para se levantar", "Árbitro pode parar o combate (KO Técnico)", "Categorias por peso", "Equipamento obrigatório: luvas, protetor bucal, coquilha"],
+    beneficios: ["Queima até 800 calorias por hora", "Excelente para defesa pessoal", "Melhora força, flexibilidade e resistência", "Desenvolve confiança e autodisciplina"],
+    atletas: [
+      { name: "Giorgio Petrosyan", country: "🇮🇹 Itália", info: "Considerado o melhor kickboxer de sempre" },
+      { name: "Buakaw Banchamek", country: "🇹🇭 Tailândia", info: "Ícone do kickboxing mundial" },
+      { name: "Rico Verhoeven", country: "🇳🇱 Holanda", info: "Campeão Heavyweight da Glory" }
+    ],
+    curiosidades: ["O kickboxing é uma das artes marciais com crescimento mais rápido", "A Glory é a maior organização de kickboxing profissional", "Pode ser praticado a partir dos 5-6 anos", "K-1 foi a organização que popularizou o kickboxing nos anos 90", "Existem várias modalidades: full contact, low kick, K-1 rules"],
+    estilo: "Estilos: Full Contact (pontapés acima da cintura), Low Kick (pontapés à perna também), K-1 Rules (o mais completo). Treino inclui saco, manoplas e sparring."
+  },
+  box: {
+    icon: "🥊", name: "Box",
+    intro: "O boxe é um dos desportos de combate mais antigos e respeitados. Dois pugilistas utilizam apenas os punhos para pontuar e tentar fazer knockdown ou KO o adversário. É um desporto de disciplina, técnica e força mental.",
+    historia: "O boxe existe desde a Grécia Antiga (Jogos Olímpicos de 688 a.C.). As regras modernas (Marquess of Queensberry Rules) foram estabelecidas em 1867 na Inglaterra, introduzindo luvas e rounds. É Olímpico desde 1904.",
+    regras: ["Rounds de 3 minutos (profissional) com 1 min de intervalo", "Apenas socos com a parte da frente das luvas são válidos", "Proibido: cabeçadas, mordidas, golpes abaixo do cinto, cotoveladas", "Knockdown: 8 segundos para se levantar (regra dos 8)", "3 knockdowns numa ronda = TKO (árbitro para o combate)", "Vitória por KO, TKO, decisão dos juízes ou desqualificação", "Categorias de peso: do peso palha ao peso pesado"],
+    beneficios: ["Desenvolve força, velocidade e resistência", "Excelente para defesa pessoal", "Melhora coordinação e disciplina", "Fortalece saúde mental e confiança"],
+    atletas: [
+      { name: "Muhammad Ali", country: "🇺🇸 EUA", info: "'The Greatest', 3x Campeão Mundial dos Pesados" },
+      { name: "Mike Tyson", country: "🇺🇸 EUA", info: "O mais jovem Campeão Mundial dos Pesados (20 anos)" },
+      { name: "Canelo Álvarez", country: "🇲🇽 México", info: "Campeão em 4 categorias de peso" },
+      { name: "Tyson Fury", country: "🇬🇧 Reino Unido", info: "Campeão WBC dos Pesos Pesados, invicto" }
+    ],
+    curiosidades: ["Muhammad Ali é considerado o maior boxeador de todos os tempos", "O combate mais longo durou 110 rounds (1893)", "Portugal tem vários campeões europeus e mundiais amadores", "A luva de boxe pesa entre 8 e 20 onças", "O boxe feminino tornou-se Olímpico em 2012"],
+    estilo: "Estilos: out-boxer (distância, jab), slugger (potência), swarmer (pressão), boxer-puncher (versátil). A defesa é tão importante como o ataque."
+  },
+  karate: {
+    icon: "🥋", name: "Karaté",
+    intro: "O karaté é uma arte marcial japonesa que utiliza socos, pontapés, joelhadas e cotoveladas. Muito mais que um desporto de combate, é uma filosofia de vida baseada no respeito, disciplina e autodesenvolvimento.",
+    historia: "Originado em Okinawa (Japão) no século XVII, influenciado por artes marciais chinesas. O mestre Gichin Funakoshi introduziu o karaté no Japão continental em 1922. Tornou-se Olímpico em Tóquio 2020 (embora tenha sido retirado para Paris 2024).",
+    regras: ["Duas categorias: Kata (formas) e Kumite (combate)", "No Kumite: pontuação por técnicas controladas e precisas", "Yuko (1 pt), Waza-ari (2 pts), Ippon (3 pts) por zona de acerto", "Proibido contacto excessivo e golpes à cabeça sem controlo", "Árbitro central com 4 juízes nas esquinas", "Equipamento: kimono (gi), luvas, protetor bucal e coquilha", "Graus: faixas coloridas até à faixa preta (Dan)"],
+    beneficios: ["Desenvolve disciplina e respeito", "Melhora coordenação, equilíbrio e flexibilidade", "Excelente para defesa pessoal", "Fortalece caráter e autoconfiança"],
+    atletas: [
+      { name: "Rafael Aghayev", country: "🇦🇿 Azerbaijão", info: "5x Campeão do Mundo de Kumite" },
+      { name: "Sandra Sánchez", country: "🇪🇸 Espanha", info: "Campeã Olímpica e 5x Campeã do Mundo em Kata" },
+      { name: "Antonio Diaz", country: "🇻🇪 Venezuela", info: "4x Campeão do Mundo em Kata" }
+    ],
+    curiosidades: ["'Karaté' significa 'mão vazia' em japonês", "Existem mais de 100 estilos de karaté", "As faixas coloridas foram introduzidas apenas no século XX", "O karaté tem mais de 50 milhões de praticantes no mundo", "Portugal tem tradição forte em competições europeias de karaté"],
+    estilo: "Estilos principais: Shotokan, Goju-ryu, Shito-ryu, Wado-ryu. O dojo (sala de treino) é um espaço de respeito e aprendizagem."
+  },
+  muaythai: {
+    icon: "🥋", name: "Muay Thai",
+    intro: "O Muay Thai, conhecido como 'a arte das 8 armas', é a arte marcial nacional da Tailândia. Utiliza socos, pontapés, joelhadas e cotoveladas — daí o nome. É considerado um dos estilos de combate mais eficazes do mundo.",
+    historia: "Com séculos de história na Tailândia, o Muay Thai era treinado pelos guerreiros do exército tailandês. No século XX tornou-se desporto nacional. Popularizou-se globalmente nos anos 1990 através do K-1 e da TV. Está em crescimento olímpico.",
+    regras: ["Rounds de 3 minutos (5 rounds em combates profissionais)", "Pontuação por socos, pontapés, joelhadas e cotoveladas", "Clinch é permitido e inclui joelhadas", "Knockdown: 8 segundos para continuar", "Árbitro pode parar o combate por superioridade técnica", "Equipamento: luvas, protetor bucal, mongkon (faixa de cabeça)", "Cerimónia Wai Kru Ram Muay antes de cada combate"],
+    beneficios: ["Um dos treinos mais completos do mundo", "Queima até 1000 calorias por sessão", "Desenvolve todas as áreas do condicionamento físico", "Fortalece disciplina mental extrema"],
+    atletas: [
+      { name: "Buakaw Banchamek", country: "🇹🇭 Tailândia", info: "2x Campeão do Mundo K-1 MAX, ícone global" },
+      { name: "Samart Payakaroon", country: "🇹🇭 Tailândia", info: "Considerado o maior Muay Thai fighter de sempre" },
+      { name: "Rodtang Jitmuangnon", country: "🇹🇭 Tailândia", info: "Campeão ONE Championship, estilo muito agressivo" }
+    ],
+    curiosidades: ["'Muay Thai' significa 'boxe tailandês'", "A cerimónia Wai Kru é um ritual de respeito ao professor", "O clinch (plam) é uma posição única do Muay Thai", "Tailândia tem estádios de Muay Thai em cada cidade", "Em Portugal o Muay Thai cresce muito rapidamente"],
+    estilo: "As '8 armas': socos (2), pontapés (2), joelhadas (2), cotoveladas (2). O clinch é uma especialidade tailandesa. Treino inclui saco, pads, corda e sparring."
+  },
+  jiujitsu: {
+    icon: "🥋", name: "Jiu-Jitsu",
+    intro: "O Brazilian Jiu-Jitsu (BJJ) é uma arte marcial de luta no chão focada em técnicas de agarramento, imobilizações e chaves articulares. Popularizado pelo Brasil, tornou-se a arte marcial que mais cresce no mundo.",
+    historia: "O Jiu-Jitsu japonês foi trazido ao Brasil por Mitsuyo Maeda no início do século XX. A família Gracie adaptou e desenvolveu o estilo brasileiro, focado em levar o combate ao chão. Ganhou reconhecimento mundial com o sucesso no UFC nos anos 1990.",
+    regras: ["Vitória por submissão (tap out), pontos ou vantagens", "Pontos: takedown (2), sweep (2), passagem de guarda (3), montada/costas (4)", "Divisões por peso e nível (faixa)", "Tempo varia: 5 a 10 minutos por combate", "Proibido: golpes de qualquer tipo", "Tap out: bater 3 vezes no adversário ou no chão = desistência", "Faixas: branca, azul, roxa, castanha, preta"],
+    beneficios: ["Desenvolve força funcional e flexibilidade", "Excelente defesa pessoal em qualquer situação", "Reduz stress e melhora humor", "Desenvolve paciência e resolução de problemas"],
+    atletas: [
+      { name: "Roger Gracie", country: "🇧🇷 Brasil", info: "Considerado o maior BJJ competitor de sempre" },
+      { name: "Marcelo Garcia", country: "🇧🇷 Brasil", info: "5x Campeão do Mundo, especialista em guilhotina" },
+      { name: "Gordon Ryan", country: "🇺🇸 EUA", info: "Dominador atual do BJJ profissional" }
+    ],
+    curiosidades: ["A família Gracie popularizou o BJJ no mundo inteiro", "O UFC foi criado para mostrar a eficácia do Jiu-Jitsu Gracie", "Royce Gracie venceu os primeiros Mundiais do UFC com BJJ", "Uma faixa preta pode demorar 10 anos a conquistar", "Portugal tem uma comunidade BJJ muito ativa e em crescimento"],
+    estilo: "Posições-chave: guarda, meia-guarda, montada, costas, guarda invertida. Técnicas: guillotine, triângulo, armbar, rear naked choke."
+  },
+  natacao: {
+    icon: "🏊", name: "Natação",
+    intro: "A natação é um dos desportos mais completos e saudáveis do mundo. Trabalha praticamente todos os músculos do corpo, tem baixo impacto nas articulações e pode ser praticada em qualquer idade. É também uma competência de segurança essencial.",
+    historia: "A natação competitiva surgiu em Inglaterra no século XIX. Esteve nos primeiros Jogos Olímpicos modernos em 1896 (Atenas). Michael Phelps tornou-se o atleta mais medalhadoo da história olímpica com 23 ouros.",
+    regras: ["4 estilos: crol (livre), costas, bruços, mariposa", "Competições de piscina de 25m (curta) ou 50m (longa)", "Viragens técnicas obrigatórias em cada estilo", "Largadas da plataforma (exceto costas)", "Proibido tocar no fundo ou nas bordas fora dos momentos permitidos", "Desqualificação por técnica incorreta", "Estafetas: 4 nadadores em sequência"],
+    beneficios: ["Exercita mais de 600 músculos simultaneamente", "Zero impacto articular - ideal para lesionados e idosos", "Melhora capacidade pulmonar e cardiovascular", "Excelente para reabilitação e fisioterapia"],
+    atletas: [
+      { name: "Michael Phelps", country: "🇺🇸 EUA", info: "23 ouros olímpicos - o atleta mais condecorado de sempre" },
+      { name: "Katie Ledecky", country: "🇺🇸 EUA", info: "7x Campeã Olímpica, recordista mundial nos meios-fundos" },
+      { name: "César Cielo", country: "🇧🇷 Brasil", info: "Recordista mundial nos 50m livre" }
+    ],
+    curiosidades: ["Michael Phelps tem uma envergadura de 2,01m (mais que a sua altura)", "Os fatos de banho tecnológicos foram banidos em 2010", "A natação sincronizada é também Olímpica", "Portugal tem tradição nos campeonatos europeus juvenis", "Saber nadar pode salvar vidas - é considerada competência básica"],
+    estilo: "4 técnicas: Crol (mais rápido), Costas, Bruços (mais lento, maior esforço), Mariposa (mais exigente tecnicamente). Os medley combinam todos."
+  },
+  danca: {
+    icon: "💃", name: "Dança",
+    intro: "A dança é uma forma de expressão artística e desportiva que combina movimento, ritmo e criatividade. Do desporto competitivo à arte performativa, a dança existe em centenas de estilos ao redor do mundo e é reconhecida pela World Dance Council como desporto.",
+    historia: "A dança existe desde os primórdios da humanidade como ritual, celebração e comunicação. A dança competitiva formalizou-se no século XX. A dança de salão tornou-se competição organizada nos anos 1920. O breakdance estreou-se nos Jogos Olímpicos de Paris 2024.",
+    regras: ["Categorias: Standard, Latino, Dança de Salão, Hip-Hop, Ballet, Contemporâneo", "Avaliação por técnica, expressão artística, musicalidade e apresentação", "Competições por categoria etária e nível", "Nas danças de par: sincronia e complementaridade são fundamentais", "Vestuário específico por categoria", "Juízes atribuem notas individuais por critério"],
+    beneficios: ["Desenvolve coordenação, ritmo e equilíbrio", "Excelente para saúde cardiovascular", "Melhora postura e flexibilidade", "Fortalece saúde mental e expressão emocional", "Desenvolve confiança e criatividade"],
+    atletas: [
+      { name: "Yulia Zagoruychenko", country: "🇷🇺 Rússia", info: "5x Campeã do Mundo em Latino" },
+      { name: "Carlos & Alexa Anguiano", country: "🇺🇸 EUA", info: "Campeões mundiais de dança de salão" },
+      { name: "Phil Wizard", country: "🇨🇦 Canadá", info: "Campeão Olímpico de Breaking (Paris 2024)" }
+    ],
+    curiosidades: ["O breakdance estreou-se nos Jogos Olímpicos de Paris 2024", "A dança profissional exige até 8 horas de treino diário", "Portugal tem muitos campeões europeus de dança desportiva", "O Tango é Património Imaterial da UNESCO", "Existem mais de 500 estilos de dança reconhecidos no mundo"],
+    estilo: "Estilos populares: Salsa, Bachata, Tango, Valsa, Quickstep, Samba, Rumba, Hip-Hop, Ballet, Contemporâneo, Flamenco, Kizomba."
+  },
+  patinagem: {
+    icon: "⛸️", name: "Patinagem",
+    intro: "A patinagem engloba várias disciplinas praticadas sobre gelo ou rodas. Da beleza artística da patinagem artística à velocidade da patinagem de velocidade, é um desporto que combina equilíbrio, elegância e atletismo.",
+    historia: "A patinagem no gelo existe desde o século XIII na Holanda, onde se usavam ossos como lâminas. Os patins de metal surgiram no século XVII. A patinagem artística é Olímpica desde 1908. A patinagem de velocidade no gelo é Olímpica desde 1924.",
+    regras: ["Modalidades: artística, velocidade, hóquei no gelo, patinagem artística em quad", "Na artística: avaliação de componentes técnicos e de programa", "Saltos classificados por dificuldade (Axel é o mais difícil)", "Giros e sequências coreográficas pontuam separadamente", "Queda resulta em dedução de pontos", "Na velocidade: puro tempo ao longo da pista"],
+    beneficios: ["Fortalece pernas, core e equilíbrio", "Excelente para coordenação motora", "Melhora confiança e graciosidade", "Cardio eficaz com baixo impacto"],
+    atletas: [
+      { name: "Yuzuru Hanyu", country: "🇯🇵 Japão", info: "2x Campeão Olímpico, primeiro a bater 300 pontos" },
+      { name: "Ilia Malinin", country: "🇺🇸 EUA", info: "Primeiro a executar quadruplo Axel em competição" },
+      { name: "Caetano Simaeis", country: "🇵🇹 Portugal", info: "Representante português em campeonatos europeus" }
+    ],
+    curiosidades: ["O Axel é o único salto com entrada para a frente", "Yuzuru Hanyu tem mais de 10 milhões de seguidores nas redes sociais", "Portugal compete em patinagem artística nos campeonatos europeus", "A lâmina do patim tem apenas 4mm de espessura", "Patinagem em quad (rollers) tem cada vez mais adeptos em Portugal"],
+    estilo: "Saltos: Axel, Lutz, Flip, Loop, Salchow, Toe Loop. Giros: Camel, Sit spin, Upright spin, Combination spin. A coreografia conta 50% da nota."
+  },
+  ginastica: {
+    icon: "🤸", name: "Ginástica",
+    intro: "A ginástica é uma das modalidades mais completas e antigas do desporto. Combina força, flexibilidade, equilíbrio, coordenação e expressão artística. É base para muitos outros desportos e é um dos maiores eventos dos Jogos Olímpicos.",
+    historia: "A ginástica moderna foi desenvolvida por Friedrich Ludwig Jahn na Alemanha no início do século XIX. Esteve nos primeiros Jogos Olímpicos modernos em 1896. A ginástica artística feminina só se tornou Olímpica em 1952.",
+    regras: ["Modalidades: artística, rítmica, acrobática, trampolim", "Na artística: barra, paralelas, cavalo com arções, argolas (masc.); trave, solo, salto, barras assimétricas (fem.)", "Pontuação: nota de dificuldade (D) + nota de execução (E)", "Deduções por quedas, passos fora e erros técnicos", "Rítmica: arco, bola, maças, fita, corda", "World Artistic Gymnastics Championships é o principal evento"],
+    beneficios: ["Desenvolve força relativa extraordinária", "Máxima flexibilidade e mobilidade articular", "Excelente equilíbrio e propriocepção", "Base para qualquer atividade desportiva"],
+    atletas: [
+      { name: "Simone Biles", country: "🇺🇸 EUA", info: "7x Campeã Olímpica, considerada a maior ginasta de sempre" },
+      { name: "Nadia Comaneci", country: "🇷🇴 Roménia", info: "Primeira atleta a conseguir nota 10 perfeita nos Olímpicos" },
+      { name: "Kohei Uchimura", country: "🇯🇵 Japão", info: "6x Campeão do Mundo no All-Around" }
+    ],
+    curiosidades: ["Nadia Comaneci conseguiu a primeira nota 10 perfeita em 1976", "Simone Biles tem movimentos batizados com o seu nome", "A ginástica rítmica é praticada quase exclusivamente por mulheres", "Portugal tem ginastas de trampolim em competições mundiais", "Uma ginasta profissional treina mais de 30 horas por semana"],
+    estilo: "Tipos: Artística (aparelhos), Rítmica (objetos e música), Acrobática (pares e grupos), Trampolim (saltos), Aeróbica (sequências aeróbicas)."
+  },
+  motociclismo: {
+    icon: "🏍️", name: "Motociclismo",
+    intro: "O motociclismo desportivo engloba várias disciplinas de competição em mota. Do glamour do MotoGP ao off-road do Motocross e ao enduro, é um desporto de velocidade, técnica e coragem que apaixona milhões de fãs em todo o mundo.",
+    historia: "As primeiras corridas de motas ocorreram no final do século XIX, logo após a invenção da motocicleta. O Campeonato do Mundo de Motos foi criado em 1949. O MotoGP é a categoria rainha desde 2002. Portugal tem um circuito internacional em Portimão.",
+    regras: ["MotoGP: Moto4 (motores de 1000cc), Moto2 (765cc), Moto3 (250cc)", "Corridas de 25+ voltas em circuitos internacionais", "Pontuação: 25-20-16-13-11-10-9-8-7-6-5-4-3-2-1 para top 15", "Bandeira vermelha: corrida parada por acidente ou condições", "Penalizações: ride-through ou stop-and-go por infrações", "Bandeira preta: desqualificação imediata", "Equipamento de segurança obrigatório: fato de couro, capacete homologado"],
+    beneficios: ["Desenvolve reflexos e tomada de decisão rápida", "Exige condicionamento físico elevado", "Estimula raciocínio estratégico e técnico", "Promove respeito pelas normas de segurança"],
+    atletas: [
+      { name: "Valentino Rossi", country: "🇮🇹 Itália", info: "9x Campeão do Mundo, o ídolo mais popular do MotoGP" },
+      { name: "Marc Márquez", country: "🇪🇸 Espanha", info: "8x Campeão do Mundo, dominou o MotoGP 2013-2019" },
+      { name: "Jorge Martin", country: "🇪🇸 Espanha", info: "Campeão do Mundo MotoGP 2024" }
+    ],
+    curiosidades: ["O Circuito de Portimão (Algarve) recebe o GP de Portugal", "As motas de MotoGP atingem mais de 350 km/h", "Marc Márquez estreou-se no MotoGP aos 20 anos e foi logo campeão", "O Dakar é a corrida off-road mais dura do mundo", "Portugal tem vários pilotos nos campeonatos europeus de velocidade"],
+    estilo: "Categorias: MotoGP, Superbike (WSBK), Motocross, Enduro, Trial, Speedway, Side-car. Cada uma exige técnica e mota específicas."
+  },
+  automobilismo: {
+    icon: "🏎️", name: "Automobilismo",
+    intro: "O automobilismo é o desporto motorizado mais popular do mundo. Da Fórmula 1 ao Rali, passando pelo endurance racing, engloba dezenas de categorias que testam os limites da engenharia e do talento humano.",
+    historia: "A primeira corrida automóvel oficial realizou-se em 1894 (Paris-Rouen). A Fórmula 1 surgiu em 1950. Le Mans (criada em 1923) é a corrida de endurance mais famosa. Portugal teve em 1984 um GP de F1 realizado no Estoril.",
+    regras: ["F1: 20 corridas por temporada em circuitos internacionais", "Pontuação: 25-18-15-12-10-8-6-4-2-1 para top 10 + 1 ponto volta rápida", "DRS (Drag Reduction System) para ultrapassagens", "Safety Car em caso de acidente", "Pit stops obrigatórios (composto de pneus diferente)", "Bandeiras: verde (livre), amarela (perigo), vermelha (paragem), preta (desq.)", "Peso mínimo: piloto + carro 798kg"],
+    beneficios: ["Desenvolve reflexos e capacidade de decisão em milissegundos", "Exige condicionamento físico (forças G até 5G)", "Estimula engenharia, tecnologia e inovação", "Desenvolve trabalho em equipa complexo (piloto + engenheiros)"],
+    atletas: [
+      { name: "Ayrton Senna", country: "🇧🇷 Brasil", info: "3x Campeão do Mundo F1, considerado o maior piloto de sempre" },
+      { name: "Michael Schumacher", country: "🇩🇪 Alemanha", info: "7x Campeão do Mundo F1, recordista histórico" },
+      { name: "Lewis Hamilton", country: "🇬🇧 Reino Unido", info: "7x Campeão do Mundo F1, recordista de vitórias (103)" }
+    ],
+    curiosidades: ["Portugal teve um GP de F1 no Estoril em 1984-1996", "As monopostos de F1 aceleram 0-100km/h em menos de 2 segundos", "Ayrton Senna é considerado o maior piloto de sempre por muitos fãs", "Le Mans dura 24 horas ininterruptas", "Portugal é forte no Rali: Sébastien Loeb ganhou 9 vezes o Rali de Portugal"],
+    estilo: "Categorias: Fórmula 1, Fórmula 2/3 (formação), WRC (Rali), WEC/Le Mans (endurance), NASCAR (oval americano), Formula E (elétrico)."
+  }
+};
+
+// ===================== NAVIGATION FUNCTIONS =====================
+function toggleNav() {
+  document.getElementById('mainNav').classList.toggle('open');
+}
+
+function hideAll() {
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('healthPage').style.display = 'none';
+  document.getElementById('sportPages').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
+function showHome() {
+  hideAll();
+  document.getElementById('homePage').style.display = 'block';
+}
+
+function showHealth() {
+  hideAll();
+  document.getElementById('healthPage').style.display = 'block';
+}
+
+function showSport(id) {
+  hideAll();
+  const container = document.getElementById('sportPages');
+  container.style.display = 'block';
+
+  // Check if already rendered
+  if (document.getElementById('sport-' + id)) {
+    document.getElementById('sport-' + id).style.display = 'block';
+    return;
+  }
+
+  const s = sports[id];
+  if (!s) return;
+
+  const athleteCards = s.atletas.map(a => `
+    <div class="athlete-card">
+      <div class="ath-icon">🏅</div>
+      <h4>${a.name}</h4>
+      <p>${a.country}</p>
+      <p>${a.info}</p>
+    </div>
+  `).join('');
+
+  const rulesHTML = s.regras.map(r => `<li>${r}</li>`).join('');
+  const benefitsHTML = s.beneficios.map(b => `<li>${b}</li>`).join('');
+  const curiositiesHTML = s.curiosidades.map((c,i) => `<li><strong>${i+1}.</strong> ${c}</li>`).join('');
+
+  const html = `
+    <div id="sport-${id}" class="sport-detail">
+      <div class="page-hero">
+        <div class="big-icon">${s.icon}</div>
+        <h2>${s.name}</h2>
+        <p>${s.intro}</p>
+        <button class="back-btn" onclick="backToHome()">← Voltar ao Início</button>
+      </div>
+      <div class="section-wrap">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(event,'intro-${id}','${id}')">📖 Introdução</button>
+          <button class="tab-btn" onclick="switchTab(event,'historia-${id}','${id}')">📜 História</button>
+          <button class="tab-btn" onclick="switchTab(event,'regras-${id}','${id}')">📋 Regras</button>
+          <button class="tab-btn" onclick="switchTab(event,'atletas-${id}','${id}')">🏅 Atletas</button>
+          <button class="tab-btn" onclick="switchTab(event,'beneficios-${id}','${id}')">❤️ Benefícios</button>
+          <button class="tab-btn" onclick="switchTab(event,'curiosidades-${id}','${id}')">💡 Curiosidades</button>
+          <button class="tab-btn" onclick="switchTab(event,'estilo-${id}','${id}')">🎨 Estilo</button>
+          <button class="tab-btn" onclick="switchTab(event,'niveis-${id}','${id}')">🎯 Níveis</button>
+        </div>
+
+        <div id="intro-${id}" class="tab-content active">
+          <div class="info-card">
+            <h3>📖 Sobre o ${s.name}</h3>
+            <p>${s.intro}</p>
+          </div>
+        </div>
+
+        <div id="historia-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>📜 História e Evolução</h3>
+            <p>${s.historia}</p>
+          </div>
+        </div>
+
+        <div id="regras-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>📋 Regras Básicas</h3>
+            <ul>${rulesHTML}</ul>
+          </div>
+        </div>
+
+        <div id="atletas-${id}" class="tab-content">
+          <div class="athlete-grid">${athleteCards}</div>
+        </div>
+
+        <div id="beneficios-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>❤️ Benefícios para a Saúde</h3>
+            <ul>${benefitsHTML}</ul>
+          </div>
+        </div>
+
+        <div id="curiosidades-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>💡 5+ Curiosidades</h3>
+            <ul>${curiositiesHTML}</ul>
+          </div>
+        </div>
+
+        <div id="estilo-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>🎨 Estilos e Variantes</h3>
+            <p>${s.estilo}</p>
+          </div>
+        </div>
+
+        <div id="niveis-${id}" class="tab-content">
+          <div class="info-card">
+            <h3>🎯 Níveis em Portugal</h3>
+            <table class="levels-table">
+              <thead><tr><th>Escalão</th><th>Idade</th></tr></thead>
+              <tbody>
+                <tr><td>🐣 Petizes</td><td>5–7 anos</td></tr>
+                <tr><td>🌱 Traquinas</td><td>8–9 anos</td></tr>
+                <tr><td>⭐ Benjamins</td><td>10–11 anos</td></tr>
+                <tr><td>🔵 Infantis</td><td>12–13 anos</td></tr>
+                <tr><td>🟡 Iniciados</td><td>14–15 anos</td></tr>
+                <tr><td>🟠 Juvenis</td><td>16–17 anos</td></tr>
+                <tr><td>🔴 Juniores</td><td>18–19 anos</td></tr>
+                <tr><td>🏆 Seniores</td><td>20–34 anos</td></tr>
+                <tr><td>🌟 Veteranos</td><td>35+ anos</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:2rem; display:flex; flex-wrap:wrap; gap:1rem;">
+          <button class="btn-primary" onclick="backToHome()">← Outros Desportos</button>
+          <button class="btn-primary" style="background:var(--accent2)" onclick="showHealth()">❤️ Saúde & Desporto</button>
+        </div>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+function backToHome() {
+  // Hide sport pages
+  document.querySelectorAll('.sport-detail').forEach(el => el.style.display = 'none');
+  showHome();
+}
+
+function switchTab(event, tabId, sportId) {
+  // Get parent section
+  const sport = document.getElementById('sport-' + sportId);
+  sport.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  sport.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
